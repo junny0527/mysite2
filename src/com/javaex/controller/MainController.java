@@ -1,4 +1,4 @@
-package com.javaec.controller;
+package com.javaex.controller;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
