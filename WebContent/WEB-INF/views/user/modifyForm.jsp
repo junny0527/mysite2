@@ -21,7 +21,7 @@ UserVo authUser = (UserVo) session.getAttribute("authUser");
 
 		<div id="header" class="clearfix">
 			<h1>
-				<a href="">MySite</a>
+				<a href="/mysite2/main?">MySite</a>
 			</h1>
 
 			<%
@@ -86,7 +86,8 @@ UserVo authUser = (UserVo) session.getAttribute("authUser");
 				<div id="user">
 					<div id="modifyForm">
 					<form action="/mysite2/user" method="get">
-							<input type="text" name="action" value="update">
+							<input type="text" name="action" value="modify">
+							<input type="hidden" name="no" value="<%=authUser.getNo() %>">
 
 							<!-- 아이디 -->
 							<div class="form-group">

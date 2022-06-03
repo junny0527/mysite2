@@ -160,5 +160,35 @@ public class UserDao {
 
 		return count;
 	}
+	public int delete(UserVo userVo) {
+		int count = -1;
+		getConnecting();
+		try {
+
+			// 3. SQL문준비/ 바인딩/ 실행
+			// SQL문준비
+			String query = "";
+			query += " delete from users ";
+			query += " where password = ? ";
+			query += " and   no = ? ";
+
+			// 바인딩
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userVo.getPassword());
+			pstmt.setInt(2, userVo.getNo());
+
+			// 실행
+			count = pstmt.executeUpdate();
+
+			// 4.결과처리
+			System.out.println(count + "건이 삭제되었습니다.");
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		close();
+
+		return count;
+	}
 
 }
