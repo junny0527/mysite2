@@ -86,8 +86,8 @@ public class UserController extends HttpServlet {
 			// Dao를 이용해 저장하기
 			UserDao userDao = new UserDao();
 			userDao.update(userVo);
-			authUser = userDao.getUser(userVo);
-			session.setAttribute("authUser", authUser);
+			
+			
 			WebUtil.forward(request, response, "/mysite2/main");
 		}
 	}
