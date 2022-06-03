@@ -90,7 +90,7 @@ public class UserController extends HttpServlet {
 			UserVo authUser = userDao.getUser(userVo);
 			if (authUser == null) {
 				System.out.println("정보실패");
-				WebUtil.redirect(request, response, "/mysite2/user?action=loginForm");
+				WebUtil.redirect(request, response, "/mysite2/user?action=modifyForm");
 			} else {
 				System.out.println("업데이트");
 				HttpSession session = request.getSession();
