@@ -53,7 +53,7 @@ UserVo authUser = (UserVo) session.getAttribute("authUser");
 				<li><a href="">입사지원서</a></li>
 				<li><a href="">게시판</a></li>
 				<li><a href="">갤러리</a></li>
-				<li><a href="">방명록</a></li>
+				<li><a href="./gbc?action=addList">방명록</a></li>
 			</ul>
 		</div>
 		<!-- //nav -->

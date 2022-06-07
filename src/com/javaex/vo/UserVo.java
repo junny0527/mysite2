@@ -23,6 +23,21 @@ public class UserVo {
 		this.password = password;
 	}
 
+	public UserVo(int no, String password, String name, String gender) {
+		super();
+		this.no = no;
+		this.password = password;
+		this.name = name;
+		this.gender = gender;
+	}
+
+	public UserVo(String password, String name, String gender) {
+		super();
+		this.password = password;
+		this.name = name;
+		this.gender = gender;
+	}
+
 	public UserVo(String id, String password, String name, String gender) {
 		super();
 		this.id = id;

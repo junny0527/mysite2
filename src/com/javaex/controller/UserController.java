@@ -70,37 +70,46 @@ public class UserController extends HttpServlet {
 			session.invalidate();
 
 			WebUtil.redirect(request, response, "/mysite2/main");
-		} else if ("modifyForm".equals(action)) {
+		} else if ("modifyForm".equals(action)) { // 수정폼
+			System.out.println("UserController>modifyForm");
 
+			// 로그인한 사용자의 no 값을 세션에서 가져오기
+			HttpSession session = request.getSession();
+			UserVo authUser = (UserVo) session.getAttribute("authUser");
+			int no = authUser.getNo();
+
+			// no 로 사용자 정보 가져오기
+			UserDao userDao = new UserDao();
+			UserVo userVo = userDao.getUser(no); // no id password name gender
+
+			// request 의 attribute 에 userVo 는 넣어서 포워딩
+			request.setAttribute("userVo", userVo);
 			WebUtil.forward(request, response, "/WEB-INF/views/user/modifyForm.jsp");
-
 		} else if ("modify".equals(action)) {
-			String id = request.getParameter("id");
+			int no = Integer.parseInt(request.getParameter("no"));
 			String password = request.getParameter("password");
 			String name = request.getParameter("name");
 			String gender = request.getParameter("gender");
 
-			// vo만들기
-			UserVo userVo = new UserVo(id, password, name, gender);
-			System.out.println(userVo);
-			// Dao를 이용해 저장하기
-			UserDao userDao = new UserDao();
-			userDao.update(userVo);
-			
-			UserVo authUser = userDao.getUser(userVo);
-			if (authUser == null) {
-				System.out.println("정보실패");
-				WebUtil.redirect(request, response, "/mysite2/user?action=modifyForm");
-			} else {
-				System.out.println("업데이트");
-				HttpSession session = request.getSession();
-				session.setAttribute("authUser", authUser);
+			// VO에 담기
+			UserVo authUser = new UserVo();
+			authUser.setNo(no);
+			authUser.setPassword(password);
+			authUser.setName(name);
+			authUser.setGender(gender);
+			System.out.println(authUser);
 
-				WebUtil.redirect(request, response, "/mysite2/main");
-			}
-			
+			// 다오만들어서 바꿔주기
+			UserDao userDao = new UserDao();
+
+			userDao.update(authUser);
+
+			HttpSession session = request.getSession();
+			session.setAttribute("authUser", authUser);
+
 			WebUtil.redirect(request, response, "/mysite2/main");
-		}
+
+		} 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

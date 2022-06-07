@@ -4,7 +4,7 @@
 
 <%
 UserVo authUser = (UserVo) session.getAttribute("authUser");
-%>	
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,8 @@ UserVo authUser = (UserVo) session.getAttribute("authUser");
 <title>Insert title here</title>
 <link href="/mysite2/assets/css/mysite.css" rel="stylesheet"
 	type="text/css">
-<link href="/mysite2/assets/css/user.css" rel="stylesheet" type="text/css">
+<link href="/mysite2/assets/css/user.css" rel="stylesheet"
+	type="text/css">
 
 </head>
 <body>
@@ -34,7 +35,7 @@ UserVo authUser = (UserVo) session.getAttribute("authUser");
 			%>
 
 			<ul>
-				<li><%=authUser.getName() %> 님 안녕하세요^^</li>
+				<li><%=authUser.getName()%> 님 안녕하세요^^</li>
 				<li><a href="/mysite2/user?action=logout" class="btn_s">로그아웃</a></li>
 				<li><a href="/mysite2/user?action=modifyForm" class="btn_s">회원정보수정</a></li>
 			</ul>
@@ -51,7 +52,7 @@ UserVo authUser = (UserVo) session.getAttribute("authUser");
 				<li><a href="">입사지원서</a></li>
 				<li><a href="">게시판</a></li>
 				<li><a href="">갤러리</a></li>
-				<li><a href="">방명록</a></li>
+				<li><a href="./gbc?action=addList">방명록</a></li>
 			</ul>
 		</div>
 		<!-- //nav -->

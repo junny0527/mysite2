@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.javaex.vo.UserVo;
 
@@ -82,7 +84,75 @@ public class UserDao {
 		return count;
 	}
 
-	// 사용자 정보 가져오기(로그인시 사용)
+	public int update(UserVo userVo) {
+		int count = -1;
+		getConnecting();
+		try {
+
+			// 3. SQL문준비/ 바인딩/ 실행
+			// SQL문준비
+			String query = "";
+			query += " update users ";
+			query += " set password = ? ";
+			query += "     ,name = ? ";
+			query += "     ,gender = ? ";
+			query += " where no = ? ";
+			
+			System.out.println(query);
+
+			// 바인딩
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userVo.getPassword());
+			pstmt.setString(2, userVo.getName());
+		pstmt.setString(3, userVo.getGender());
+			pstmt.setInt(4, userVo.getNo());
+
+			// 실행
+			count = pstmt.executeUpdate();
+
+			// 4.결과처리
+			System.out.println(count + "건이 수정되었습니다.");
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		close();
+
+		return count;
+	}
+
+	public int delete(UserVo userVo) {
+		int count = -1;
+		getConnecting();
+		try {
+
+			// 3. SQL문준비/ 바인딩/ 실행
+			// SQL문준비
+			String query = "";
+			query += " delete from users ";
+			query += " where password = ? ";
+			query += " and   no = ? ";
+
+			// 바인딩
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userVo.getPassword());
+			pstmt.setInt(2, userVo.getNo());
+
+			// 실행
+			count = pstmt.executeUpdate();
+
+			// 4.결과처리
+			System.out.println(count + "건이 삭제되었습니다.");
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		close();
+
+		return count;
+	}
+
+	// 사용자 정보 가져오기(로그인시 사용,no,id)
 	public UserVo getUser(UserVo userVo) {
 
 		this.getConnecting();
@@ -124,71 +194,140 @@ public class UserDao {
 		return authUser;
 	}
 
-	public int update(UserVo userVo) {
-		int count = -1;
-		getConnecting();
+	// 사용자 정보 가져오기(회원정보 수정폼, no id password name gender)
+	public UserVo getUser(int no) {
+		UserVo userVo = null;
+
+		this.getConnecting();
+
 		try {
 
-			// 3. SQL문준비/ 바인딩/ 실행
-			// SQL문준비
+			// 3. SQL문 준비 / 바인딩 / 실행
+			// SQL문 준비
 			String query = "";
-			query += " update users ";
-			query += " set id = ? ";
-			query += "     ,password = ? ";
-			query += "     ,name = ? ";
-			query += "     ,gender = ? ";
+			query += " select  no, ";
+			query += "         id, ";
+			query += "         password, ";
+			query += "         name, ";
+			query += "         gender ";
+			query += " from users ";
 			query += " where no = ? ";
 
 			// 바인딩
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userVo.getId());
-			pstmt.setString(2, userVo.getPassword());
-			pstmt.setString(3, userVo.getName());
-			pstmt.setString(4, userVo.getGender());
-			pstmt.setInt(5, userVo.getNo());
+			pstmt.setInt(1, no);
 
 			// 실행
-			count = pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 
 			// 4.결과처리
-			System.out.println(count + "건이 수정되었습니다.");
+			while (rs.next()) {
+				int userno = rs.getInt("no");
+				String id = rs.getString("id");
+				String password = rs.getString("password");
+				String name = rs.getString("name");
+				String gender = rs.getString("gender");
+
+				userVo = new UserVo(userno, id,password,name, gender);
+			}
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		}
-		close();
 
-		return count;
+		this.close();
+
+		return userVo;
 	}
-	public int delete(UserVo userVo) {
-		int count = -1;
+
+
+
+	public List<UserVo> userList() {
+		List<UserVo> userList = new ArrayList<UserVo>();
 		getConnecting();
 		try {
 
 			// 3. SQL문준비/ 바인딩/ 실행
 			// SQL문준비
 			String query = "";
-			query += " delete from users ";
-			query += " where password = ? ";
-			query += " and   no = ? ";
+			query += " select  no ";
+			query += "         ,id ";
+			query += "         ,password ";
+			query += "         ,name ";
+			query += "         ,gender ";
+			query += " from    users ";
 
 			// 바인딩
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userVo.getPassword());
-			pstmt.setInt(2, userVo.getNo());
 
 			// 실행
-			count = pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 
 			// 4.결과처리
-			System.out.println(count + "건이 삭제되었습니다.");
+			while (rs.next()) {
+
+				int no = rs.getInt("no");
+				String id = rs.getString("id");
+				String password = rs.getString("password");
+				String name = rs.getString("name");
+				String gender = rs.getString("gender");
+
+				UserVo userVo = new UserVo(no, id, password, name, gender);
+
+				userList.add(userVo);
+
+			}
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		}
 		close();
 
-		return count;
+		return userList;
+	}
+
+	public UserVo userList(int no) {
+		UserVo userVo = null;
+		getConnecting();
+		try {
+
+			// 3. SQL문준비/ 바인딩/ 실행
+			// SQL문준비
+			String query = "";
+			query += " select  no ";
+			query += "         ,id ";
+			query += "         ,password ";
+			query += "         ,name ";
+			query += "         ,gender ";
+			query += " from    users ";
+			query += " where    no = ? ";
+
+			// 바인딩
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, no);
+
+			// 실행
+			rs = pstmt.executeQuery();
+
+			// 4.결과처리
+			while (rs.next()) {
+
+				int num = rs.getInt("no");
+				String id = rs.getString("id");
+				String password = rs.getString("password");
+				String name = rs.getString("name");
+				String gender = rs.getString("gender");
+
+				userVo = new UserVo(num, id, password, name, gender);
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		close();
+
+		return userVo;
 	}
 
 }

@@ -1,14 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.javaex.vo.*"%>
+<%@ page import="java.util.*"%>
+
+<%
+UserVo authUser = (UserVo) session.getAttribute("authUser");
+List<GuestBookVo> personList = (List<GuestBookVo>) request.getAttribute("bList");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>방명록</title>
 
-<link href="../../assets/css/mysite.css" rel="stylesheet"
+<link href="/mysite2/assets/css/mysite.css" rel="stylesheet"
 	type="text/css">
-<link href="../../assets/css/guestbook.css" rel="stylesheet"
+<link href="/mysite2/assets/css/guestbook.css" rel="stylesheet"
 	type="text/css">
 
 </head>
@@ -18,20 +26,29 @@
 
 		<div id="header" class="clearfix">
 			<h1>
-				<a href="">MySite</a>
+				<a href="/mysite2/main?">MySite</a>
 			</h1>
 
-			<!-- 
+			<%
+			if (authUser == null) {
+			%>
+			<%-- 로그인 실패, 로그인 전 --%>
 			<ul>
-				<li>황일영 님 안녕하세요^^</li>
-				<li><a href="" class="btn_s">로그아웃</a></li>
-				<li><a href="" class="btn_s">회원정보수정</a></li>
+				<li><a href="/mysite2/user?action=loginForm" class="btn_s">로그인</a></li>
+				<li><a href="/mysite2/user?action=joinForm" class="btn_s">회원가입</a></li>
 			</ul>
-			-->
+			<%
+			} else {
+			%>
+			<%-- 로그인 성공~~ --%>
 			<ul>
-				<li><a href="" class="btn_s">로그인</a></li>
-				<li><a href="" class="btn_s">회원가입</a></li>
+				<li><%=authUser.getName()%>님 안녕하세요 ^^</li>
+				<li><a href="/mysite2/user?action=logout" class="btn_s">로그아웃</a></li>
+				<li><a href="/mysite2/user?action=modifyForm" class="btn_s">회원정보수정</a></li>
 			</ul>
+			<%
+			}
+			%>
 
 		</div>
 		<!-- //header -->
@@ -41,7 +58,7 @@
 				<li><a href="">입사지원서</a></li>
 				<li><a href="">게시판</a></li>
 				<li><a href="">갤러리</a></li>
-				<li><a href="">방명록</a></li>
+				<li><a href="./gbc?action=addList">방명록</a></li>
 			</ul>
 		</div>
 		<!-- //nav -->
@@ -71,7 +88,8 @@
 				<!-- //content-head -->
 
 				<div id="guestbook">
-					<form action="" method="">
+					<form action="./gbc" method="post">
+						<input type="hidden" name="action" value="add">
 						<table id="guestAdd">
 							<colgroup>
 								<col style="width: 70px;">
@@ -81,12 +99,10 @@
 							</colgroup>
 							<tbody>
 								<tr>
-									<th><label class="form-text" for="input-uname">이름</label>
-									</td>
+									<th><label class="form-text" for="input-uname">이름</label></th>
 									<td><input id="input-uname" type="text" name="name"></td>
-									<th><label class="form-text" for="input-pass">패스워드</label>
-									</td>
-									<td><input id="input-pass" type="password" name="pass"></td>
+									<th><label class="form-text" for="input-pass">패스워드</label></th>
+									<td><input id="input-pass" type="password" name="password"></td>
 								</tr>
 								<tr>
 									<td colspan="4"><textarea name="content" cols="72"
@@ -103,6 +119,9 @@
 
 					</form>
 
+					<%
+					for (int i = 0; i < personList.size(); i++) {
+					%>
 					<table class="guestRead">
 						<colgroup>
 							<col style="width: 10%;">
@@ -111,34 +130,19 @@
 							<col style="width: 10%;">
 						</colgroup>
 						<tr>
-							<td>1234555</td>
-							<td>이정재</td>
-							<td>2020-03-03 12:12:12</td>
-							<td><a href="">[삭제]</a></td>
+							<td><%=personList.get(i).getNo()%></td>
+							<td><%=personList.get(i).getName()%></td>
+							<td><%=personList.get(i).getRegDate()%></td>
+							<td><a
+								href="./gbc?action=deleteForm&no=<%=personList.get(i).getNo()%>">[삭제]</a></td>
 						</tr>
 						<tr>
-							<td colspan=4 class="text-left">방명록 글입니다. 방명록 글입니다.</td>
+							<td colspan=4 class="text-left"><%=personList.get(i).getContent()%></td>
 						</tr>
 					</table>
-					<!-- //guestRead -->
-
-					<table class="guestRead">
-						<colgroup>
-							<col style="width: 10%;">
-							<col style="width: 40%;">
-							<col style="width: 40%;">
-							<col style="width: 10%;">
-						</colgroup>
-						<tr>
-							<td>1234555</td>
-							<td>이정재</td>
-							<td>2020-03-03 12:12:12</td>
-							<td><a href="">[삭제]</a></td>
-						</tr>
-						<tr>
-							<td colspan=4 class="text-left">방명록 글입니다. 방명록 글입니다.</td>
-						</tr>
-					</table>
+					<%
+					}
+					%>
 					<!-- //guestRead -->
 
 				</div>
@@ -149,7 +153,8 @@
 		</div>
 		<!-- //container  -->
 
-		<div id="footer">Copyright ⓒ 2020 황일영. All right reserved</div>
+		<div id="footer">Copyright ⓒ 2022 김범준 MarshmallowShadow. All
+			rights reserved.</div>
 		<!-- //footer -->
 	</div>
 	<!-- //wrap -->
