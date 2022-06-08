@@ -10,69 +10,75 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.javaex.dao.GuestBookDao;
-import com.javaex.vo.GuestBookVo;
 import com.javex.webutil.WebUtil;
+import com.javaex.vo.GuestBookVo;
 
-@WebServlet("/gbc")
+@WebServlet("/guestbook")
 public class GuestController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// 포스트 방식일때 한글깨짐 방지
 		request.setCharacterEncoding("UTF-8");
 
-		// action 파라미터꺼내기
 		String action = request.getParameter("action");
-		System.out.println(action);
 
-		if ("addList".equals(action)) {
-			// 다오를통해서 데이터 가져오기
-			GuestBookDao guestbookDao = new GuestBookDao();
-			List<GuestBookVo> bookList = guestbookDao.guestBookList();
-			System.out.println(bookList);
+		if ("add".equals(action)) {
+			System.out.println("guestbookController > 추가");
 
-			// request에 데이터 추가
-			request.setAttribute("bList", bookList);
-
-			// 데이터 + html --> jsp로 실행
-			WebUtil.forward(request, response, "/WEB-INF/views/guestbook/addList.jsp");
-		} else if ("add".equals(action)) {
+			//vo만들기
 			String name = request.getParameter("name");
-			String password = request.getParameter("password");
+			String password = request.getParameter("pass");
 			String content = request.getParameter("content");
-			String regDate = request.getParameter("reg_date");
-			GuestBookDao guestbookDao = new GuestBookDao();
-			GuestBookVo guestbookVo = new GuestBookVo(name, password, content, regDate);
 
-			guestbookDao.guestBookInsert(guestbookVo);
+			//Dao 사용
+			GuestBookDao dao = new GuestBookDao();
+			GuestBookVo vo = new GuestBookVo(name, password, content);
+			dao.insert(vo);
 
-			// 리다이텍트 list
-			WebUtil.redirect(request, response, "/mysite2/gbc?action=addList");
+			//리다이렉트
+			WebUtil.redirect(request, response, "/mysite2/guestbook");
+
 		} else if ("deleteForm".equals(action)) {
-			GuestBookDao guestbookDao = new GuestBookDao();
-			int no = Integer.parseInt(request.getParameter("no"));
-			GuestBookVo guestbookVo = guestbookDao.guestBookList(no);
-			System.out.println(guestbookVo);
-			request.setAttribute("guestbookVo", guestbookVo);
-
+			System.out.println("guestbookController > 삭제폼");
+			
+			//포워드
 			WebUtil.forward(request, response, "/WEB-INF/views/guestbook/deleteForm.jsp");
 
 		} else if ("delete".equals(action)) {
-
+			System.out.println("guestbookController > 삭제");
+			
+			//vo만들기
 			int no = Integer.parseInt(request.getParameter("no"));
+			String password = request.getParameter("pass");
 
-			GuestBookDao guestbookDao = new GuestBookDao();
-			GuestBookVo guestbookVo = guestbookDao.guestBookList(no);
-			guestbookDao.guestBookDelete(guestbookVo);
-			WebUtil.redirect(request, response, "/mysite2/gbc?action=addList");
+			GuestBookVo vo = new GuestBookVo();
+			vo.setNo(no);
+			vo.setPassword(password);
 
+			//Dao 사용
+			GuestBookDao dao = new GuestBookDao();
+			dao.delete(vo);
+
+			//리다이렉트
+			WebUtil.redirect(request, response, "/mysite2/guestbook");
+			
+		} else {
+			System.out.println("guestbookController > 리스트");
+			
+			//Dao 사용
+			GuestBookDao dao = new GuestBookDao();
+			List<GuestBookVo> gList = dao.getList();
+
+			//포워드 
+			request.setAttribute("guestList", gList);
+			WebUtil.forward(request, response, "/WEB-INF/views/guestbook/addList.jsp");
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
