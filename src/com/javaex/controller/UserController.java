@@ -60,9 +60,9 @@ public class UserController extends HttpServlet {
 			
 			//Dao 사용
 			UserDao userDao = new UserDao();
-			UserVo authVo = userDao.getUser(id, password);
+			UserVo userVo = userDao.getUser(id, password);
 			
-			if(authVo == null ) { 
+			if(userVo == null ) { 
 				System.out.println("로그인실패");
 				
 				//리다이렉트
@@ -73,7 +73,7 @@ public class UserController extends HttpServlet {
 				
 				//세션영역 로그인한 사용자 데이터 추가
 				HttpSession session = request.getSession();
-				session.setAttribute("authUser", authVo);
+				session.setAttribute("authUser", userVo);
 				
 				//리다이렉트
 				WebUtil.redirect(request, response, "/mysite2/main");
