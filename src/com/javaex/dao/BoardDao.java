@@ -73,7 +73,7 @@ public class BoardDao {
 			count = pstmt.executeUpdate();
 
 			// 4.결과처리
-			System.out.println("boardDao.write(): " + count + "건 게시판 글 저장");
+			System.out.println("boardDao.write(): " + count + "건 글 저장");
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
@@ -129,7 +129,7 @@ public class BoardDao {
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 			try {
-				System.out.println("글읽기 예외 발생-롤백");
+				System.out.println("롤백");
 				conn.rollback();
 
 			} catch (SQLException e1) {
@@ -245,12 +245,12 @@ public class BoardDao {
 			query += " WHERE  bo.user_no = us.no ";
 
 			if (word == null || word == "") {
-				query += " order by reg_date desc  ";
+				query += " order by reg_date asc  ";
 				pstmt = conn.prepareStatement(query);
 
 			} else {
 				query += " and  bo.title like ? ";
-				query += " order by reg_date desc  ";
+				query += " order by reg_date asc  ";
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, '%' + word + '%');
 			}
