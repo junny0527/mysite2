@@ -91,8 +91,7 @@ public class BoardDao {
 		getConnection();
 
 		try {
-			conn.setAutoCommit(false);
-
+			
 			upCount(no);
 
 			// 3. SQL문 준비 / 바인딩 / 실행
@@ -124,17 +123,11 @@ public class BoardDao {
 				boardVo = new BoardVo(rno, title, content, hit, regDate, userNo, userName);
 			}
 
-			conn.commit();
+			
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
-			try {
-				System.out.println("롤백");
-				conn.rollback();
-
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			
 		}
 		close();
 		return boardVo;
