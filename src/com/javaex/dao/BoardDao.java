@@ -102,7 +102,7 @@ public class BoardDao {
 			query += "      , bo.content ";
 			query += "      , us.name ";
 			query += "      , bo.hit ";
-			query += "      , TO_CHAR(BO.reg_date, 'YYYY-MM-DD HH:MI') regDate ";
+			query += "      , TO_CHAR(bo.reg_date, 'YYYY-MM-DD HH:MI') regDate ";
 			query += "      , us.no userNo";
 			query += " FROM board bo, users us ";
 			query += " WHERE  bo.user_no = us.no ";
