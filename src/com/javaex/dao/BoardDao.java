@@ -189,7 +189,7 @@ public class BoardDao {
 			count = pstmt.executeUpdate();
 
 			// 4.결과처리
-			System.out.println("boardDao.modify(): " + count + " 건 수정");
+			System.out.println("boardDao.Update(): " + count + " 건 수정");
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
