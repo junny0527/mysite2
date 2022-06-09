@@ -169,7 +169,7 @@ public class BoardDao {
 	}
 
 	// 수정
-	public int modify(BoardVo boardVo) {
+	public int Update(BoardVo boardVo) {
 		int count = 0;
 
 		getConnection();

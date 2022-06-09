@@ -92,7 +92,7 @@ public class BoardController extends HttpServlet {
 			
 			//Dao 사용
 			BoardDao boardDao = new BoardDao();
-			boardDao.modify(boardVo);
+			boardDao.Update(boardVo);
 			
 			//리다이렉트
 			WebUtil.redirect(request, response, "/mysite2/board");
