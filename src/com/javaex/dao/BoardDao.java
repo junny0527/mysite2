@@ -238,15 +238,12 @@ public class BoardDao {
 			query += " WHERE  bo.user_no = us.no ";
 
 			if (word == null || word == "") {
-				query += " order by reg_date asc  ";
-				pstmt = conn.prepareStatement(query);
-
-			} else {
 				query += " and  bo.title like ? ";
 				query += " order by reg_date asc  ";
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, '%' + word + '%');
-			}
+
+			} 
 
 			rs = pstmt.executeQuery();
 
